@@ -208,3 +208,15 @@ body {
 	display: grid;
 	place-items: center;
 }
+
+.external-link {
+	color: #000;
+	background-color: #ffd139;
+}
+
+.external-link:active {
+	color: #000;
+}
+.external-link:visited {
+	color: #000;
+}
