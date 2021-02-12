@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="index.css" />
+		<!-- ----------------------------------------------------------------------- -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
+		<!-- ----------------------------------------------------------------------- -->
+		<script src="lib/p5.speech.js"></script>
+		<script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+		<title>Document</title>
+	</head>
+
+	<body>
+		<div class="container">
+			<header class="header">
+				<div class="header-question-container">
+					Draw: <span class="header-question-display"></span>
+				</div>
+
+				<span class="timer-display">00:00</span>
+				<div class="left-display">
+					<div class="btn close">close</div>
+					<div class="btn-icon erase">
+						<img src="/svg/eraser.svg" class="icon" />
+					</div>
+					<div class="btn-icon skip">
+						<img
+							src="/svg/remote-control-fast-forward-button.svg"
+							class="icon"
+						/>
+					</div>
+					<div class="btn-icon quit">
+						<img src="/svg/cancel.svg" class="icon" />
+					</div>
+				</div>
+			</header>
+			<div id="drawing-container"></div>
+			<div id="footer"></div>
+		</div>
+		<div class="overlay">
+			<div class="overlay-content">
+				<h1 class="display-question"></h1>
+				<button class="btn auto-center start-drawing">start</button>
+			</div>
+		</div>
+
+		<div id="home-page">
+			<div class="main">
+				<div class="banner"></div>
+				<div class="hero"></div>
+				<div class="main-content-container">
+					<h2>An exciting game built with ml5.js ✨ !</h2>
+					<button class="btn main-btn yellow start-questions">
+						Let's draw!
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="game-over-page">
+			<h1>Game Over</h1>
+		</div>
+	</body>
+
+	<script src="js/index.js" type="module"></script>
+</html>
