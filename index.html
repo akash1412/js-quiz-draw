@@ -25,9 +25,8 @@
 					Draw: <span class="header-question-display"></span>
 				</div>
 
-				<span class="timer-display">00:00</span>
+				<span class="timer-display">00:20</span>
 				<div class="left-display">
-					<div class="btn close">close</div>
 					<div class="btn-icon erase">
 						<img src="/svg/eraser.svg" class="icon" />
 					</div>
@@ -43,11 +42,22 @@
 				</div>
 			</header>
 			<div id="drawing-container"></div>
-			<div id="footer"></div>
+			<div id="footer">
+				<img src="/svg/listening.svg" alt="listening" class="listening-icon" />
+				<h1 class="response-label"></h1>
+			</div>
 		</div>
 		<div class="overlay">
 			<div class="overlay-content">
-				<h1 class="display-question"></h1>
+				<div class="close-overlay-container">
+					<img src="/svg/cancel.svg" class="close-icon" />
+				</div>
+
+				<div class="question-container">
+					<h1 class="display-question">Draw a</h1>
+					<h1 class="question-placeholder"></h1>
+					<h1>in under 20 seconds.</h1>
+				</div>
 				<button class="btn auto-center start-drawing">start</button>
 			</div>
 		</div>
@@ -71,7 +81,19 @@
 			</div>
 		</div>
 		<div class="game-over-page">
-			<h1>Game Over</h1>
+			<div class="centered-content">
+				<h1 class="title">Game Over</h1>
+				<button>play Again</button>
+			</div>
+		</div>
+		<div class="quit-page">
+			<div class="centered-content">
+				<h1 class="title">Are you sure you want to quit</h1>
+				<div class="buttons-container">
+					<button class="btn confirm-quit-game">Yes</button>
+					<button class="btn dont-quit">No</button>
+				</div>
+			</div>
 		</div>
 	</body>
 

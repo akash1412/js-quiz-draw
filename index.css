@@ -10,37 +10,45 @@ html {
 }
 
 body {
-	width: 100vw;
 	height: 100vh;
 	padding: 0;
 	margin: 0%;
 	position: relative;
 	font-family: "Coming Soon", cursive;
+	overflow: hidden;
 }
 
 .overlay {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 100%;
+	height: 0%;
 	color: #fff;
 	font-size: 2rem;
 	background-color: rgba(0, 0, 0, 0.966);
 	position: fixed;
-	z-index: 20;
 	overflow-y: hidden;
-	transition: 0.5s;
+	transition: 0.3s;
 	display: grid;
 	place-items: center;
-	-webkit-transition: 0.5s;
-	-moz-transition: 0.5s;
-	-ms-transition: 0.5s;
-	-o-transition: 0.5s;
+	-webkit-transition: 0.3s;
+	-moz-transition: 0.3s;
+	-ms-transition: 0.3s;
+	-o-transition: 0.3s;
 }
 
+.open-overlay {
+	height: 100%;
+	z-index: 40;
+}
 .overlay-content {
+	width: 100%;
+	height: 100%;
+	position: relative;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .overlay-open {
@@ -48,6 +56,10 @@ body {
 
 .overlay-close {
 	height: 0;
+}
+
+.title {
+	font-size: 3rem;
 }
 
 .btn {
@@ -79,6 +91,7 @@ body {
 
 .container {
 	height: 100%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	font-size: 1.8rem;
@@ -92,6 +105,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-weight: 600;
 }
 
 .header-question-container {
@@ -114,14 +128,7 @@ body {
 	flex-grow: 1;
 }
 
-#footer {
-	flex-basis: 3rem;
-	text-align: center;
-	font-size: 2rem;
-}
-
 #home-page {
-	display: block;
 	position: relative;
 	top: 0;
 	left: 0;
@@ -137,17 +144,45 @@ body {
 	/* display: grid; */
 	place-items: center;
 }
+.show-home-page {
+	display: block;
+}
+
+.close-home-page {
+	display: none;
+}
 
 .game-over-page {
-	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 100%;
-	background-color: yellow;
+	height: 0%;
+	background-color: rgb(7, 0, 100);
 	width: 100%;
+	z-index: 40;
+	transition: 0.5s;
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: 0.5s;
+	-moz-transition: 0.5s;
+	-ms-transition: 0.5s;
+	-o-transition: 0.5s;
+}
+
+.show-game-over-page {
+	opacity: 1;
+	visibility: visible;
+	height: 100%;
+}
+
+.centered-content {
+	margin: 0 auto;
+	width: 75%;
+
+	margin-top: 8rem;
+	display: flex;
 	flex-direction: column;
-	z-index: 80;
+	align-items: center;
 }
 
 .main {
@@ -189,14 +224,18 @@ body {
 	background-image: url("/images/test.svg");
 }
 
-.display-question {
+.question-container {
 	color: #fff;
 	margin-bottom: 1.7rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .icon {
 	width: 2rem;
 	height: 2rem;
+	cursor: pointer;
 }
 
 .btn-icon {
@@ -219,4 +258,63 @@ body {
 }
 .external-link:visited {
 	color: #000;
+}
+
+.quit-page {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 0%;
+	background-color: rgb(107, 145, 1);
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	z-index: 80;
+	display: none;
+}
+
+.buttons-container {
+	width: 100%;
+	margin-top: 10rem;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+#footer {
+	padding: 0.6rem;
+	position: absolute;
+	bottom: 2rem;
+	background-color: #ffffff;
+	text-align: center;
+	font-size: 2rem;
+	align-self: center;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	display: grid;
+	place-items: center;
+}
+
+.listening-icon {
+	width: 2rem;
+	height: 2rem;
+}
+
+.hide-listening-icon {
+	display: none;
+}
+
+.response-label {
+	font-size: 2rem;
+	font-weight: 550;
+}
+
+.close-overlay-container {
+	display: inline-block;
+	cursor: pointer;
+	position: absolute;
+	top: 2rem;
+}
+
+.close-icon {
+	width: 2rem;
+	height: 2rem;
 }

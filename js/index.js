@@ -2,12 +2,10 @@ const restart = document.querySelector(".container");
 
 const timerDisplay = document.querySelector(".timer-display");
 
-const closeDrawing = document.querySelector(".close");
-
 let isOverlayOpen = true;
 
 let startDrawing = false;
-let count = 0;
+let count = 20;
 
 const questions = ["Bat", "ball", "smiley"];
 
@@ -23,51 +21,94 @@ const handleOverlayAction = () => {
 	}
 };
 
-closeDrawing.addEventListener("click", () => {
-	isOverlayOpen = true;
-	handleOverlayAction();
-});
-
 let sketch = function (p) {
 	let curQuesIndexCount = 0;
 	let startBtn = p.select(".start-questions");
-	let questionDisplay = p.select(".display-question");
+	let questionPlaceholder = p.select(".question-placeholder");
 	let headerQuestionDisplay = p.select(".header-question-display");
 	let parentContainer = p.select("#drawing-container");
 	let EraseBtn = p.select(".erase");
 	let startDrawingBtn = p.select(".start-drawing");
 	let footer = p.select("#footer");
-	let closeDrawing = p.select(".close");
 	let classifier;
 	let canvas;
 	let timerId;
 	let skipQuestion = p.select(".skip");
-	let speectBot = new p5.Speech(); // speech synthesis object
-	let gameOverPage = p.select(".game-over-page");
+	let quitGame = p.select(".quit");
+	let speectBot; // speech synthesis object
+	// let gameOverPage = p.select(".game-over-page");
+	let confirmDontQuitBtn = p.select(".dont-quit");
+	let confirmQuitGameBtn = p.select(".confirm-quit-game");
+	let quitPage = document.querySelector(".quit-page");
+	let pauseTimer = false;
+	let loadingElement = document.querySelector(".listening-icon");
+	let responseLabel = p.select(".response-label");
 
-	questionDisplay.html(`Draw a ${questions[curQuesIndexCount]}`);
+	// HTML selectors
+	let homePage = document.querySelector("#home-page");
+	let OverlayPage = document.querySelector(".overlay");
+	let gameOverPage = document.querySelector(".game-over-page");
+	let OverlayCloseBtn = document.querySelector(".close-overlay-container");
+
+	function closePage(selector, cssClass) {
+		selector.classList.remove(`${cssClass}`);
+	}
+
+	function openPage(selector, cssClass) {
+		selector.classList.add(`${cssClass}`);
+	}
+
+	questionPlaceholder.html(`${questions[curQuesIndexCount]}`);
 	headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
 
 	startBtn.mousePressed(() => {
-		document.querySelector("#home-page").style.display = "none";
+		OverlayPage.classList.add("open-overlay");
+	});
+
+	console.log(OverlayCloseBtn);
+
+	OverlayCloseBtn.addEventListener("click", () => {
+		homePage.classList.remove("close-home-page");
+		closePage(OverlayPage, "open-overlay");
 	});
 
 	startDrawingBtn.mousePressed(handleStartBtn);
 
 	skipQuestion.mousePressed(handleSkipQuestionEvent);
 
+	//* continue game game btn on quit Page
+	confirmDontQuitBtn.mousePressed(() => {
+		quitPage.style.display = "none";
+		pauseTimer = false;
+		startDrawing = true;
+	});
+
+	//* confirm quit game Btn
+	confirmQuitGameBtn.mousePressed(() => {
+		quitPage.style.display = "none";
+		homePage.classList.remove("close-home-page");
+	});
+
+	//* quit game button on drawing page
+	quitGame.mousePressed(() => {
+		quitPage.style.display = "block";
+		pauseTimer = true;
+		startDrawing = false;
+	});
+
 	function handleSkipQuestionEvent() {
 		closeDrawingContainerAndClearCanvas();
 	}
 
 	function updateQuestion() {
-		questionDisplay.html(`Draw a ${questions[curQuesIndexCount]}`);
+		questionPlaceholder.html(` ${questions[curQuesIndexCount]}`);
 		headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
 	}
 
 	function updateTimerDisplay(count) {
 		timerDisplay.innerHTML =
-			count % 10 === 0 && count !== 10 ? `00:0${count}` : `00:${count}`;
+			// count % 10 === 0 && count !== 10 ? `00:0${count}` : `00:${count}`;
+			count < 10 ? `00:0${count}` : `00:${count}`;
 	}
 
 	function resetTimer(timerId) {
@@ -79,47 +120,53 @@ let sketch = function (p) {
 		timerId = setInterval(timerFunction, 1000);
 
 		function timerFunction() {
-			if (count === 20) {
+			if (count === 0) {
 				closeDrawingContainerAndClearCanvas();
 			} else {
-				updateTimerDisplay(count);
-				count++;
+				if (pauseTimer) {
+					return;
+				} else {
+					count--;
+					updateTimerDisplay(count);
+				}
 			}
 		}
 	}
 
 	function handleStartBtn() {
+		homePage.classList.add("close-home-page");
 		isOverlayOpen = false;
 		handleOverlayAction();
 		setTimeout(() => {
 			startDrawing = true;
 			startTimer();
 		}, 100);
-		p.background(180);
+		// p.background(180);
 	}
 
+	// handleStartBtn();
+
 	function handleGameOverEvent() {
-		document.querySelector(".game-over-page").style.display = "block";
+		gameOverPage.classList.add("show-game-over-page");
 	}
 
 	p.preload = function () {
 		classifier = ml5.imageClassifier("DoodleNet");
+		speectBot = new p5.Speech();
 	};
-
-	console.log(questions.length);
 
 	p.setup = function () {
 		canvas = p.createCanvas(
 			parentContainer.elt.offsetWidth,
 			parentContainer.elt.offsetHeight
 		);
-		p.background(180);
+		p.background(255);
 
 		EraseBtn.mousePressed(clearCanvas);
-		closeDrawing.mousePressed(closeDrawingContainerAndClearCanvas);
 
 		canvas.mouseReleased(classifyCanvas);
-		footer.html("...");
+		// footer.html("...");
+		// footer.appendChild(loadingElement);
 	};
 
 	p.draw = function () {
@@ -143,25 +190,29 @@ let sketch = function (p) {
 			console.error(error);
 		}
 
-		footer.html(
+		loadingElement.classList.add("hide-listening-icon");
+
+		responseLabel.html(
 			`I see: ${results[0].label}, ${results[1].label}, ${results[2].label}`
 		);
 
 		results.slice(0, 3).forEach(res => {
-			console.log(res);
 			speectBot.speak(res.label);
 		});
 	}
 
 	function clearCanvas() {
-		p.background(180);
-		footer.html("...");
+		p.background(255);
+
+		loadingElement.classList.remove("hide-listening-icon");
+		responseLabel.html("");
+		speectBot.cancel();
 	}
 
 	function closeDrawingContainerAndClearCanvas() {
 		isOverlayOpen = true;
 		startDrawing = false;
-		count = 0;
+		count = 20;
 		curQuesIndexCount++; // 1 // 2
 		if (curQuesIndexCount <= 2) {
 			updateQuestion();
