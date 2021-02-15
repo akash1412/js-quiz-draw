@@ -71,7 +71,6 @@ let sketch = function (p) {
 	// headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
 
 	startBtn.mousePressed(() => {
-		console.log("logged");
 		updateQuestion();
 		handleOverlayAction();
 	});
