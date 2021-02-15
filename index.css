@@ -1,3 +1,8 @@
+:root {
+	--color-yellow: #ffd139;
+	--color-green: rgb(0, 204, 0);
+}
+
 *,
 *::after,
 *::before {
@@ -23,18 +28,18 @@ body {
 	left: 0;
 	width: 100%;
 	height: 0%;
-	color: #fff;
+	color: #000;
 	font-size: 2rem;
-	background-color: rgba(0, 0, 0, 0.966);
+	background-color: var(--color-yellow);
 	position: fixed;
 	overflow-y: hidden;
-	transition: 0.3s;
+	transition: 0.5s ease-in;
 	display: grid;
 	place-items: center;
-	-webkit-transition: 0.3s;
-	-moz-transition: 0.3s;
-	-ms-transition: 0.3s;
-	-o-transition: 0.3s;
+	-webkit-transition: 0.5s ease-in;
+	-moz-transition: 0.5s ease-in;
+	-ms-transition: 0.5s ease-in;
+	-o-transition: 0.5s ease-in;
 }
 
 .open-overlay {
@@ -48,7 +53,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 }
 
 .overlay-open {
@@ -77,7 +81,7 @@ body {
 }
 
 .yellow {
-	background-color: #ffd139;
+	background-color: var(--color-yellow);
 }
 
 .main-btn {
@@ -101,7 +105,7 @@ body {
 .header {
 	width: 100%;
 	flex-basis: 5rem;
-	background-color: rgba(209, 209, 30, 0.842);
+	background-color: var(--color-yellow);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -110,6 +114,7 @@ body {
 
 .header-question-container {
 	margin-left: 1.2rem;
+	color: rgba(0, 0, 0, 0.6);
 }
 
 .left-display {
@@ -225,11 +230,28 @@ body {
 }
 
 .question-container {
-	color: #fff;
-	margin-bottom: 1.7rem;
+	margin-top: 18rem;
+	font-size: 1.5rem;
+	margin-bottom: 4rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.question-placeholder {
+	font-weight: 700;
+	font-size: 6rem;
+}
+
+.current-question-number {
+	margin-top: 2.4rem;
+	font-weight: bold;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.start-drawing {
+	font-size: 2.5rem;
+	background-color: var(--color-green);
 }
 
 .icon {
@@ -250,9 +272,8 @@ body {
 
 .external-link {
 	color: #000;
-	background-color: #ffd139;
+	background-color: var(--color-yellow);
 }
-
 .external-link:active {
 	color: #000;
 }
@@ -265,7 +286,10 @@ body {
 	top: 0;
 	left: 0;
 	height: 0%;
-	background-color: rgb(107, 145, 1);
+	background-color: rgba(0, 0, 0, 0.815);
+	color: #fff;
+	font-weight: 700;
+	font-size: 3rem;
 	width: 100%;
 	height: 100%;
 	flex-direction: column;
@@ -273,11 +297,15 @@ body {
 	display: none;
 }
 
+.confirm-quit-game {
+	margin-right: 5rem;
+}
+
 .buttons-container {
 	width: 100%;
 	margin-top: 10rem;
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: center;
 }
 
 #footer {

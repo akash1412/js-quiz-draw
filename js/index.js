@@ -2,7 +2,7 @@ const restart = document.querySelector(".container");
 
 const timerDisplay = document.querySelector(".timer-display");
 
-let isOverlayOpen = true;
+let isOverlayOpen = false;
 
 let startDrawing = false;
 let count = 20;
@@ -12,14 +12,6 @@ const questions = ["Bat", "ball", "smiley"];
 // startBtn.addEventListener("click", () => {
 // 	document.querySelector("#home-page").style.height = "0%";
 // });
-
-const handleOverlayAction = () => {
-	if (!isOverlayOpen) {
-		document.querySelector(".overlay").style.height = "0%";
-	} else {
-		document.querySelector(".overlay").style.height = "100%";
-	}
-};
 
 let sketch = function (p) {
 	let curQuesIndexCount = 0;
@@ -47,8 +39,24 @@ let sketch = function (p) {
 	// HTML selectors
 	let homePage = document.querySelector("#home-page");
 	let OverlayPage = document.querySelector(".overlay");
+	let currentQuestionPlaceholder = document.querySelector(
+		".current-question-number"
+	);
 	let gameOverPage = document.querySelector(".game-over-page");
-	let OverlayCloseBtn = document.querySelector(".close-overlay-container");
+	// let OverlayCloseBtn = document.querySelector(".close-overlay-container");
+
+	const handleOverlayAction = () => {
+		if (!isOverlayOpen) {
+			OverlayPage.classList.add("open-overlay");
+		} else {
+			OverlayPage.classList.remove("open-overlay");
+		}
+		isOverlayOpen = !isOverlayOpen;
+	};
+
+	function handleClearSpeechBot() {
+		speectBot.cancel();
+	}
 
 	function closePage(selector, cssClass) {
 		selector.classList.remove(`${cssClass}`);
@@ -58,18 +66,14 @@ let sketch = function (p) {
 		selector.classList.add(`${cssClass}`);
 	}
 
-	questionPlaceholder.html(`${questions[curQuesIndexCount]}`);
-	headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
+	// * updated code here
+	// questionPlaceholder.html(`${questions[curQuesIndexCount]}`);
+	// headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
 
 	startBtn.mousePressed(() => {
-		OverlayPage.classList.add("open-overlay");
-	});
-
-	console.log(OverlayCloseBtn);
-
-	OverlayCloseBtn.addEventListener("click", () => {
-		homePage.classList.remove("close-home-page");
-		closePage(OverlayPage, "open-overlay");
+		console.log("logged");
+		updateQuestion();
+		handleOverlayAction();
 	});
 
 	startDrawingBtn.mousePressed(handleStartBtn);
@@ -87,6 +91,12 @@ let sketch = function (p) {
 	confirmQuitGameBtn.mousePressed(() => {
 		quitPage.style.display = "none";
 		homePage.classList.remove("close-home-page");
+		resetTimer(timerId);
+		updateTimerDisplay(20);
+		pauseTimer = false;
+		startDrawing = false;
+		curQuesIndexCount = 0;
+		count = 20;
 	});
 
 	//* quit game button on drawing page
@@ -94,6 +104,7 @@ let sketch = function (p) {
 		quitPage.style.display = "block";
 		pauseTimer = true;
 		startDrawing = false;
+		clearCanvas();
 	});
 
 	function handleSkipQuestionEvent() {
@@ -103,12 +114,13 @@ let sketch = function (p) {
 	function updateQuestion() {
 		questionPlaceholder.html(` ${questions[curQuesIndexCount]}`);
 		headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
+		currentQuestionPlaceholder.textContent = `Drawing ${
+			curQuesIndexCount + 1 + " / " + questions.length
+		}`;
 	}
 
 	function updateTimerDisplay(count) {
-		timerDisplay.innerHTML =
-			// count % 10 === 0 && count !== 10 ? `00:0${count}` : `00:${count}`;
-			count < 10 ? `00:0${count}` : `00:${count}`;
+		timerDisplay.innerHTML = count < 10 ? `00:0${count}` : `00:${count}`;
 	}
 
 	function resetTimer(timerId) {
@@ -135,16 +147,13 @@ let sketch = function (p) {
 
 	function handleStartBtn() {
 		homePage.classList.add("close-home-page");
-		isOverlayOpen = false;
+
 		handleOverlayAction();
 		setTimeout(() => {
 			startDrawing = true;
 			startTimer();
 		}, 100);
-		// p.background(180);
 	}
-
-	// handleStartBtn();
 
 	function handleGameOverEvent() {
 		gameOverPage.classList.add("show-game-over-page");
@@ -199,6 +208,7 @@ let sketch = function (p) {
 		results.slice(0, 3).forEach(res => {
 			speectBot.speak(res.label);
 		});
+		// handleClearSpeechBot();
 	}
 
 	function clearCanvas() {
@@ -206,12 +216,13 @@ let sketch = function (p) {
 
 		loadingElement.classList.remove("hide-listening-icon");
 		responseLabel.html("");
-		speectBot.cancel();
+		handleClearSpeechBot();
 	}
 
 	function closeDrawingContainerAndClearCanvas() {
-		isOverlayOpen = true;
+		// isOverlayOpen = true;
 		startDrawing = false;
+
 		count = 20;
 		curQuesIndexCount++; // 1 // 2
 		if (curQuesIndexCount <= 2) {
@@ -221,16 +232,7 @@ let sketch = function (p) {
 			handleGameOverEvent();
 		}
 
-		// if (curQuesIndexCount <= 1) {
-		// 	console.log(curQuesIndexCount, questions.length - 2);
-		// 	updateQuestion();
-		// 	console.log("true");
-		// } else {
-		// 	handleGameOverEvent();
-		// 	console.log("false");
-		// }
-		// if (curQuesIndexCount <= questions.length - 2) handleOverlayAction();
-		updateTimerDisplay(0);
+		updateTimerDisplay(20);
 
 		clearCanvas();
 		resetTimer(timerId);
