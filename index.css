@@ -254,7 +254,7 @@ body {
 	top: 0;
 	left: 0;
 	height: 0%;
-	background-color: rgb(7, 0, 100);
+	background-color: var(--color-yellow);
 	width: 100%;
 	z-index: 40;
 	transition: 0.5s;
@@ -264,6 +264,7 @@ body {
 	-moz-transition: 0.5s;
 	-ms-transition: 0.5s;
 	-o-transition: 0.5s;
+	font-size: 4rem;
 }
 
 .show-game-over-page {
