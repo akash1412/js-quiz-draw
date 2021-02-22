@@ -1,17 +1,13 @@
 const restart = document.querySelector(".container");
 
-const timerDisplay = document.querySelector(".timer-display");
+const timerDisplay = document.querySelector(".timer-label");
 
 let isOverlayOpen = false;
 
 let startDrawing = false;
 let count = 20;
 
-const questions = ["Bat", "ball", "smiley"];
-
-// startBtn.addEventListener("click", () => {
-// 	document.querySelector("#home-page").style.height = "0%";
-// });
+const questions = ["line", "Bat", "ball", "smiley"];
 
 let sketch = function (p) {
 	let curQuesIndexCount = 0;
@@ -43,7 +39,8 @@ let sketch = function (p) {
 		".current-question-number"
 	);
 	let gameOverPage = document.querySelector(".game-over-page");
-	// let OverlayCloseBtn = document.querySelector(".close-overlay-container");
+	let DrawingContainer = document.querySelector("#drawing-container");
+	let gameOverBtn = p.select(".game-over-page-btn ");
 
 	const handleOverlayAction = () => {
 		if (!isOverlayOpen) {
@@ -58,20 +55,9 @@ let sketch = function (p) {
 		speectBot.cancel();
 	}
 
-	function closePage(selector, cssClass) {
-		selector.classList.remove(`${cssClass}`);
-	}
-
-	function openPage(selector, cssClass) {
-		selector.classList.add(`${cssClass}`);
-	}
-
-	// * updated code here
-	// questionPlaceholder.html(`${questions[curQuesIndexCount]}`);
-	// headerQuestionDisplay.html(`${questions[curQuesIndexCount]}`);
-
 	startBtn.mousePressed(() => {
 		updateQuestion();
+
 		handleOverlayAction();
 	});
 
@@ -79,35 +65,50 @@ let sketch = function (p) {
 
 	skipQuestion.mousePressed(handleSkipQuestionEvent);
 
-	//* continue game game btn on quit Page
+	const resetOptions = () => {
+		homePage.classList.remove("close-home-page");
+
+		clearTimer(timerId);
+
+		startDrawing = false;
+
+		pauseTimer = false;
+
+		curQuesIndexCount = 0;
+		count = 20;
+	};
+
+	//* continue dont quit game on quit Page
 	confirmDontQuitBtn.mousePressed(() => {
 		quitPage.style.display = "none";
-		pauseTimer = false;
-		startDrawing = true;
+
+		setTimeout(() => {
+			pauseTimer = false;
+			startDrawing = true;
+		}, 500);
 	});
 
 	//* confirm quit game Btn
 	confirmQuitGameBtn.mousePressed(() => {
 		quitPage.style.display = "none";
-		homePage.classList.remove("close-home-page");
-		resetTimer(timerId);
-		updateTimerDisplay(20);
-		pauseTimer = false;
-		startDrawing = false;
-		curQuesIndexCount = 0;
-		count = 20;
+		resetOptions();
+	});
+
+	gameOverBtn.mousePressed(() => {
+		gameOverPage.classList.remove("show-game-over-page");
+		resetOptions();
 	});
 
 	//* quit game button on drawing page
 	quitGame.mousePressed(() => {
 		quitPage.style.display = "block";
+
 		pauseTimer = true;
 		startDrawing = false;
-		clearCanvas();
 	});
 
 	function handleSkipQuestionEvent() {
-		closeDrawingContainerAndClearCanvas();
+		captureImage();
 	}
 
 	function updateQuestion() {
@@ -119,10 +120,10 @@ let sketch = function (p) {
 	}
 
 	function updateTimerDisplay(count) {
-		timerDisplay.innerHTML = count < 10 ? `00:0${count}` : `00:${count}`;
+		timerDisplay.innerHTML = `${count}`.padStart(2, 0);
 	}
 
-	function resetTimer(timerId) {
+	function clearTimer(timerId) {
 		clearInterval(timerId);
 	}
 
@@ -132,7 +133,7 @@ let sketch = function (p) {
 
 		function timerFunction() {
 			if (count === 0) {
-				closeDrawingContainerAndClearCanvas();
+				captureImage();
 			} else {
 				if (pauseTimer) {
 					return;
@@ -144,14 +145,60 @@ let sketch = function (p) {
 		}
 	}
 
+	function captureImage() {
+		html2canvas(document.querySelector("#drawing-container")).then(
+			canvasScreenshot => {
+				//? creating new image eleent
+
+				let image = new Image();
+				// let image = document.querySelector('.canvas-image');
+
+				//? creating card structure
+
+				const newImageCard = document.createElement("div");
+
+				const cardTitle = document.createElement("h1");
+
+				const imagePlaceholder = document.createElement("div");
+				//? inseting base64 url to image element
+
+				image.src = canvasScreenshot.toDataURL("image/png");
+
+				image.classList.add("captured-image");
+
+				cardTitle.classList.add("card-title");
+
+				imagePlaceholder.classList.add("image-placeholder");
+
+				cardTitle.textContent = questions[curQuesIndexCount];
+
+				newImageCard.classList.add("card-image-container");
+
+				imagePlaceholder.appendChild(image);
+
+				newImageCard.appendChild(imagePlaceholder);
+				newImageCard.appendChild(cardTitle);
+
+				//@------------------------------------------
+				document
+					.querySelector(".images-container")
+					.insertAdjacentElement("afterbegin", newImageCard);
+
+				//?closing canvas after capturing canvas
+				closeDrawingContainerAndClearCanvas();
+			}
+		);
+	}
+
 	function handleStartBtn() {
+		updateTimerDisplay(20);
+		handleOverlayAction();
 		homePage.classList.add("close-home-page");
 
-		handleOverlayAction();
 		setTimeout(() => {
 			startDrawing = true;
 			startTimer();
-		}, 100);
+		}, 1000);
 	}
 
 	function handleGameOverEvent() {
@@ -173,8 +220,6 @@ let sketch = function (p) {
 		EraseBtn.mousePressed(clearCanvas);
 
 		canvas.mouseReleased(classifyCanvas);
-		// footer.html("...");
-		// footer.appendChild(loadingElement);
 	};
 
 	p.draw = function () {
@@ -183,8 +228,16 @@ let sketch = function (p) {
 		p.stroke(0);
 
 		if (p.mouseIsPressed && startDrawing) {
+			console.log("drawing...");
 			p.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
 		}
+	};
+
+	p.windowResized = function () {
+		p.resizeCanvas(
+			parentContainer.elt.offsetWidth,
+			parentContainer.elt.offsetHeight
+		);
 	};
 
 	function classifyCanvas() {
@@ -200,14 +253,15 @@ let sketch = function (p) {
 
 		loadingElement.classList.add("hide-listening-icon");
 
-		responseLabel.html(
-			`I see: ${results[0].label}, ${results[1].label}, ${results[2].label}`
-		);
+		speectBot.speak(`I see ${results[0].label}`);
+		responseLabel.html(`I see: ${results[0].label}`);
 
-		results.slice(0, 3).forEach(res => {
-			speectBot.speak(res.label);
-		});
-		// handleClearSpeechBot();
+		speectBot.onEnd = function () {
+			if (questions[curQuesIndexCount] === results[0].label) {
+				captureImage();
+				// closeDrawingContainerAndClearCanvas();
+			}
+		};
 	}
 
 	function clearCanvas() {
@@ -219,11 +273,12 @@ let sketch = function (p) {
 	}
 
 	function closeDrawingContainerAndClearCanvas() {
-		// isOverlayOpen = true;
 		startDrawing = false;
+		clearTimer(timerId);
 
 		count = 20;
 		curQuesIndexCount++; // 1 // 2
+		// if (curQuesIndexCount <= 2) {
 		if (curQuesIndexCount <= 2) {
 			updateQuestion();
 			handleOverlayAction();
@@ -231,10 +286,7 @@ let sketch = function (p) {
 			handleGameOverEvent();
 		}
 
-		updateTimerDisplay(20);
-
 		clearCanvas();
-		resetTimer(timerId);
 	}
 };
 

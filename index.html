@@ -15,6 +15,7 @@
 		<!-- ----------------------------------------------------------------------- -->
 		<script src="lib/p5.speech.js"></script>
 		<script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+		<script src="lib/html2canvas.js"></script>
 		<title>Document</title>
 	</head>
 
@@ -25,20 +26,20 @@
 					Draw: <span class="header-question-display"></span>
 				</div>
 
-				<span class="timer-display">00:20</span>
+				<div class="timer-display">00:<span class="timer-label"></span></div>
 				<div class="left-display">
-					<div class="btn-icon erase">
+					<button class="btn btn-icon icon-shadow erase">
 						<img src="/svg/eraser.svg" class="icon" />
-					</div>
-					<div class="btn-icon skip">
+					</button>
+					<button class="btn btn-icon icon-shadow skip">
 						<img
 							src="/svg/remote-control-fast-forward-button.svg"
 							class="icon"
 						/>
-					</div>
-					<div class="btn-icon quit">
+					</button>
+					<button class="btn btn-icon icon-shadow quit">
 						<img src="/svg/cancel.svg" class="icon" />
-					</div>
+					</button>
 				</div>
 			</header>
 			<div id="drawing-container"></div>
@@ -56,7 +57,9 @@
 					<h1 class="question-placeholder"></h1>
 					<h1>in under 20 seconds.</h1>
 				</div>
-				<button class="btn auto-center start-drawing">got it !</button>
+				<button class="btn btn-shadow auto-center start-drawing main-btn-wdth">
+					got it !
+				</button>
 			</div>
 		</div>
 
@@ -72,7 +75,9 @@
 						>
 						✨ !
 					</h2>
-					<button class="btn main-btn yellow start-questions">
+					<button
+						class="btn btn-shadow main-btn yellow start-questions main-btn-wdth"
+					>
 						Let's draw!
 					</button>
 				</div>
@@ -81,15 +86,33 @@
 		<div class="game-over-page">
 			<div class="centered-content">
 				<h1 class="title">Game Over</h1>
-				<h1>Not Found</h1>
+				<div class="images-container">
+					<!-- <div class="card">
+                        <div class="image-container"></div>
+						<div class="title"></div>
+					</div> -->
+				</div>
+				<button
+					class="btn btn-shadow main-btn-wdth marginTopAndBottom game-over-page-btn"
+				>
+					Home
+				</button>
 			</div>
 		</div>
 		<div class="quit-page">
 			<div class="centered-content">
 				<h1>Are you sure you want to quit ?</h1>
 				<div class="buttons-container">
-					<button class="btn confirm-quit-game">Yes</button>
-					<button class="btn dont-quit">No</button>
+					<button
+						class="btn btn-shadow main-btn yellow main-btn-wdth confirm-quit-game"
+					>
+						Yes
+					</button>
+					<button
+						class="btn btn-shadow main-btn yellow main-btn-wdth dont-quit"
+					>
+						No
+					</button>
 				</div>
 			</div>
 		</div>
@@ -97,4 +120,3 @@
 
 	<script src="js/index.js" type="module"></script>
 </html>
- 
