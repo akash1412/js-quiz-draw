@@ -9,6 +9,8 @@ let count = 20;
 
 const questions = ["line", "Bat", "ball", "smiley"];
 
+//TODO after game over display page clear the last drawings for the next round
+
 let sketch = function (p) {
 	let curQuesIndexCount = 0;
 	let startBtn = p.select(".start-questions");
@@ -31,16 +33,19 @@ let sketch = function (p) {
 	let pauseTimer = false;
 	let loadingElement = document.querySelector(".listening-icon");
 	let responseLabel = p.select(".response-label");
+	let gameOverBtn = p.select(".game-over-page-btn ");
 
-	// HTML selectors
+	// DOM selectors
 	let homePage = document.querySelector("#home-page");
 	let OverlayPage = document.querySelector(".overlay");
 	let currentQuestionPlaceholder = document.querySelector(
 		".current-question-number"
 	);
 	let gameOverPage = document.querySelector(".game-over-page");
+	let ImagesContainer = document.querySelector(".images-container");
+
+	let closeAlertBtn = document.querySelector(".alert-close-btn");
 	let DrawingContainer = document.querySelector("#drawing-container");
-	let gameOverBtn = p.select(".game-over-page-btn ");
 
 	const handleOverlayAction = () => {
 		if (!isOverlayOpen) {
@@ -51,13 +56,16 @@ let sketch = function (p) {
 		isOverlayOpen = !isOverlayOpen;
 	};
 
+	closeAlertBtn.addEventListener("click", () => {
+		document.querySelector(".alert").style.display = "none";
+	});
+
 	function handleClearSpeechBot() {
 		speectBot.cancel();
 	}
 
 	startBtn.mousePressed(() => {
 		updateQuestion();
-
 		handleOverlayAction();
 	});
 
@@ -69,7 +77,7 @@ let sketch = function (p) {
 		homePage.classList.remove("close-home-page");
 
 		clearTimer(timerId);
-
+		clearImages();
 		startDrawing = false;
 
 		pauseTimer = false;
@@ -107,6 +115,10 @@ let sketch = function (p) {
 		startDrawing = false;
 	});
 
+	function clearImages() {
+		ImagesContainer.innerHTML = "";
+	}
+
 	function handleSkipQuestionEvent() {
 		captureImage();
 	}
@@ -127,22 +139,23 @@ let sketch = function (p) {
 		clearInterval(timerId);
 	}
 
-	//---------------------------------------------------
-	function startTimer() {
-		timerId = setInterval(timerFunction, 1000);
-
-		function timerFunction() {
-			if (count === 0) {
-				captureImage();
+	function timerFunction() {
+		if (count === 0) {
+			captureImage();
+		} else {
+			if (pauseTimer) {
+				return;
 			} else {
-				if (pauseTimer) {
-					return;
-				} else {
-					count--;
-					updateTimerDisplay(count);
-				}
+				count--;
+				updateTimerDisplay(count);
 			}
 		}
+	}
+
+	//---------------------------------------------------
+	function startTimer() {
+		timerFunction();
+		timerId = setInterval(timerFunction, 1000);
 	}
 
 	function captureImage() {
@@ -180,9 +193,7 @@ let sketch = function (p) {
 				newImageCard.appendChild(cardTitle);
 
 				//@------------------------------------------
-				document
-					.querySelector(".images-container")
-					.insertAdjacentElement("afterbegin", newImageCard);
+				ImagesContainer.insertAdjacentElement("beforeend", newImageCard);
 
 				//?closing canvas after capturing canvas
 				closeDrawingContainerAndClearCanvas();
@@ -195,8 +206,10 @@ let sketch = function (p) {
 		handleOverlayAction();
 		homePage.classList.add("close-home-page");
 
+		// timeout function to not start drawing on canvas immediately
 		setTimeout(() => {
-			startDrawing = true;
+			startDrawing = true; // required condition to draw to draw on canvas
+
 			startTimer();
 		}, 1000);
 	}
@@ -205,12 +218,15 @@ let sketch = function (p) {
 		gameOverPage.classList.add("show-game-over-page");
 	}
 
+	// preload loads all the required external files
 	p.preload = function () {
 		classifier = ml5.imageClassifier("DoodleNet");
 		speectBot = new p5.Speech();
 	};
 
+	// setup function runs only one time
 	p.setup = function () {
+		// setting canvas width & height
 		canvas = p.createCanvas(
 			parentContainer.elt.offsetWidth,
 			parentContainer.elt.offsetHeight
@@ -253,14 +269,13 @@ let sketch = function (p) {
 
 		loadingElement.classList.add("hide-listening-icon");
 
+		console.log(results[0].label);
+
 		speectBot.speak(`I see ${results[0].label}`);
 		responseLabel.html(`I see: ${results[0].label}`);
 
 		speectBot.onEnd = function () {
-			if (questions[curQuesIndexCount] === results[0].label) {
-				captureImage();
-				// closeDrawingContainerAndClearCanvas();
-			}
+			questions[curQuesIndexCount] === results[0].label && captureImage();
 		};
 	}
 
