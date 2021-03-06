@@ -7,11 +7,10 @@ let isOverlayOpen = false;
 let startDrawing = false;
 let count = 20;
 
-const questions = ["line", "Bat", "ball", "smiley"];
-
 //TODO after game over display page clear the last drawings for the next round
 
 let sketch = function (p) {
+	const questions = ["line", "stitches", "circle", "cat"];
 	let curQuesIndexCount = 0;
 	let startBtn = p.select(".start-questions");
 	let questionPlaceholder = p.select(".question-placeholder");
@@ -56,10 +55,6 @@ let sketch = function (p) {
 		isOverlayOpen = !isOverlayOpen;
 	};
 
-	closeAlertBtn.addEventListener("click", () => {
-		document.querySelector(".alert").style.display = "none";
-	});
-
 	function handleClearSpeechBot() {
 		speectBot.cancel();
 	}
@@ -73,11 +68,13 @@ let sketch = function (p) {
 
 	skipQuestion.mousePressed(handleSkipQuestionEvent);
 
+	// !TODO Refactor resetOption func with clearCanvasAndCloseContainer func
 	const resetOptions = () => {
 		homePage.classList.remove("close-home-page");
 
 		clearTimer(timerId);
 		clearImages();
+		clearCanvas();
 		startDrawing = false;
 
 		pauseTimer = false;
@@ -294,7 +291,7 @@ let sketch = function (p) {
 		count = 20;
 		curQuesIndexCount++; // 1 // 2
 		// if (curQuesIndexCount <= 2) {
-		if (curQuesIndexCount <= 2) {
+		if (curQuesIndexCount <= questions.length - 1) {
 			updateQuestion();
 			handleOverlayAction();
 		} else {
@@ -305,4 +302,5 @@ let sketch = function (p) {
 	}
 };
 
+// creating new p5 instance
 new p5(sketch, "drawing-container");
