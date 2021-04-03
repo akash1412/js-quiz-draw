@@ -8,9 +8,19 @@ let startDrawing = false;
 let count = 20;
 
 //TODO after game over display page clear the last drawings for the next round
+let animation = bodymovin.loadAnimation({
+	container: document.querySelector("#svg"), // Required
+	path: "https://assets6.lottiefiles.com/packages/lf20_pkanqwys.json", // Required
+	renderer: "svg", // Required
+	loop: false,
+});
+
+animation.addEventListener("complete", () => {
+	document.querySelector("#svg").style.display = "none";
+});
 
 let sketch = function (p) {
-	const questions = ["line", "stitches", "circle", "cat"];
+	const questions = ["line", "stitches", "circle", "cat", "castle"];
 	let curQuesIndexCount = 0;
 	let startBtn = p.select(".start-questions");
 	let questionPlaceholder = p.select(".question-placeholder");
@@ -26,7 +36,7 @@ let sketch = function (p) {
 	let quitGame = p.select(".quit");
 	let speectBot; // speech synthesis object
 	// let gameOverPage = p.select(".game-over-page");
-	let confirmDontQuitBtn = p.select(".dont-quit");
+	let resumeBtn = p.select(".dont-quit");
 	let confirmQuitGameBtn = p.select(".confirm-quit-game");
 	let quitPage = document.querySelector(".quit-page");
 	let pauseTimer = false;
@@ -83,8 +93,8 @@ let sketch = function (p) {
 		count = 20;
 	};
 
-	//* continue dont quit game on quit Page
-	confirmDontQuitBtn.mousePressed(() => {
+	//* resume game
+	resumeBtn.mousePressed(() => {
 		quitPage.style.display = "none";
 
 		setTimeout(() => {
@@ -265,8 +275,6 @@ let sketch = function (p) {
 		}
 
 		loadingElement.classList.add("hide-listening-icon");
-
-		console.log(results[0].label);
 
 		speectBot.speak(`I see ${results[0].label}`);
 		responseLabel.html(`I see: ${results[0].label}`);

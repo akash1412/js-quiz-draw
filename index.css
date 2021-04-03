@@ -1,5 +1,6 @@
 :root {
 	--color-yellow: #ffd139;
+	--color-yellow-dark: #f1c123;
 	--color-green: rgb(57, 180, 57);
 }
 
@@ -226,7 +227,9 @@ body {
 }
 
 #home-page {
+	/* ---------- */
 	/* display: none; */
+	/* ---------- */
 	position: relative;
 	top: 0;
 	left: 0;
@@ -259,15 +262,27 @@ body {
 	height: 0%;
 	background-color: var(--color-yellow);
 	width: 100%;
-	z-index: 40;
+	z-index: 140;
 	transition: 0.5s ease-in-out;
 	visibility: hidden;
 	opacity: 0;
+	/* --------------- */
+
+	/* --------------- */
 	-webkit-transition: 0.5s ease-in-out;
 	-moz-transition: 0.5s ease-in-out;
 	-ms-transition: 0.5s ease-in-out;
 	-o-transition: 0.5s ease-in-out;
 	font-size: 4rem;
+}
+
+.svg {
+	position: absolute;
+	top: -80px;
+	z-index: 45;
+	height: 450px;
+	width: 450px;
+	pointer-events: none;
 }
 
 .show-game-over-page {
@@ -325,10 +340,13 @@ body {
 }
 
 .banner {
-	width: 40rem;
 	height: 30rem;
-	background-repeat: no-repeat;
-	background-image: url("/images/test.svg");
+	text-align: center;
+	font-size: 5rem;
+}
+
+.banner > span {
+	color: var(--color-yellow-dark);
 }
 
 .question-container {
@@ -591,3 +609,5 @@ body {
 		display: none;
 	}
 }
+
+/* ---------------------------------------------- */
