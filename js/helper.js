@@ -1,10 +1,6 @@
 import fireStoreDB from '../lib/firebase.config.js';
 
-export const TakeSnapshot = async (
-	drawringContainerRef,
-	imageLabel,
-	IS_CANVAS_CLEAN
-) => {
+export const TakeSnapshot = async (drawringContainerRef, imageLabel) => {
 	const canvasScreenshot = await html2canvas(drawringContainerRef);
 
 	const image = new Image();
@@ -16,9 +12,7 @@ export const TakeSnapshot = async (
 		title: imageLabel,
 	};
 
-	if (!IS_CANVAS_CLEAN) {
-		await fireStoreDB.collection('screenshots').add(sektch);
-	}
+	await fireStoreDB.collection('screenshots').add(sektch);
 
 	const newImageCard = document.createElement('div');
 
