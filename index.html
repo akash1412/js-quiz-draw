@@ -32,6 +32,8 @@
 		<!-- ----------------------------------------------------------------------- -->
 		<script defer src="lib/p5.speech.js"></script>
 		<script defer src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+
+		<!-- <script defer type="module" src="lib/firebase.config.js"></script> -->
 		<script defer src="lib/html2canvas.js"></script>
 		<title>👇 JS quiz draw</title>
 	</head>
@@ -103,7 +105,13 @@
 						✨ !
 					</h2>
 					<button
-						class="btn btn-shadow main-btn colorYellow start-questions btn-width"
+						class="
+							btn btn-shadow
+							main-btn
+							colorYellow
+							start-questions
+							btn-width
+						"
 					>
 						Let's draw!
 					</button>
@@ -127,7 +135,13 @@
 				<h1>Are you sure you want to quit ?</h1>
 				<div class="buttons-container">
 					<button
-						class="btn btn-shadow main-btn colorYellow btn-width confirm-quit-game"
+						class="
+							btn btn-shadow
+							main-btn
+							colorYellow
+							btn-width
+							confirm-quit-game
+						"
 					>
 						Yes
 					</button>
@@ -140,6 +154,8 @@
 			</div>
 		</div>
 	</body>
-
-	<script src="js/index.js" type="module"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+	<script type="module" src="lib/firebase.config.js"></script>
+	<script type="module" src="js/index.js"></script>
 </html>
