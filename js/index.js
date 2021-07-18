@@ -46,7 +46,6 @@ let sketch = function (p) {
 	let loadingElement = document.querySelector('.listening-icon');
 	let responseLabel = p.select('.response-label');
 	let gameOverBtn = p.select('.game-over-page-btn ');
-	let IS_CANVAS_CLEAN = true;
 
 	// DOM selectors
 	let homePage = document.querySelector('#home-page');
@@ -131,8 +130,7 @@ let sketch = function (p) {
 	}
 
 	function handleSkipQuestionEvent() {
-		console.log('btn clicked');
-
+		console.log();
 		captureImage();
 	}
 
@@ -155,7 +153,7 @@ let sketch = function (p) {
 	function timerFunction() {
 		if (count === 0) {
 			clearTimer(timerId);
-
+			console.log(canvas);
 			captureImage();
 		} else {
 			if (pauseTimer) {
@@ -176,8 +174,7 @@ let sketch = function (p) {
 	async function captureImage() {
 		const newDrawing = await TakeSnapshot(
 			document.querySelector('#drawing-container'),
-			questions[curQuesIndexCount],
-			IS_CANVAS_CLEAN
+			questions[curQuesIndexCount]
 		);
 
 		ImagesContainer.insertAdjacentElement('beforeend', newDrawing);
@@ -229,7 +226,7 @@ let sketch = function (p) {
 
 		if (p.mouseIsPressed && startDrawing) {
 			console.log('drawing...');
-			IS_CANVAS_CLEAN = false;
+
 			p.line(p.pmouseX, p.pmouseY, p.mouseX, p.mouseY);
 		}
 	};
@@ -262,7 +259,7 @@ let sketch = function (p) {
 
 	function clearCanvas() {
 		p.background(255);
-		IS_CANVAS_CLEAN = true;
+
 		loadingElement.classList.remove('hide-listening-icon');
 		responseLabel.html('');
 		handleClearSpeechBot();
